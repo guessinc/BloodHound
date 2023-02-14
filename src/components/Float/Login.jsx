@@ -6,11 +6,17 @@ import neo4j from 'neo4j-driver';
 import semver from 'semver'
 
 const Login = () => {
-    const [url, setUrl] = useState('bolt://localhost:7687');
+    const NEO4J_ADDRESS = process.env.NEO4J_ADDRESS || '127.0.0.1';
+    const NEO4J_WEB_PORT = process.env.NEO4J_WEB_PORT || '7474';
+    const NEO4J_BOLT_PORT = process.env.NEO4J_BOLT_PORT || '7687';
+    const NEO4J_USER = process.env.NEO4J_USER || '';
+    const NEO4J_PASS = process.env.NEO4J_PASS || '';
+
+    const [url, setUrl] = useState(`bolt://${NEO4J_ADDRESS}:${NEO4J_BOLT_PORT}`);
     const [loginEnabled, setLoginEnabled] = useState(false);
     const [loginRunning, setLoginRunning] = useState(false);
-    const [user, setUser] = useState('');
-    const [password, setPassword] = useState('');
+    const [user, setUser] = useState(NEO4J_USER);
+    const [password, setPassword] = useState(NEO4J_PASS);
     const [save, setSave] = useState(false);
     const [icon, setIcon] = useState(null);
 
@@ -106,7 +112,7 @@ const Login = () => {
         let pwf = $(passwordRef.current);
         pwf.tooltip('hide');
 
-        let tempUrl = url.replace('bolt://', 'http://').replace('7687', '7474');
+        let tempUrl = url.replace('bolt://', 'http://').replace(NEO4J_BOLT_PORT, NEO4J_WEB_PORT);
         let versionRecord;
         try{
             versionRecord = await session.run('CALL dbms.components() YIELD versions RETURN versions[0] AS version')
@@ -247,7 +253,7 @@ const Login = () => {
 
         let tempUrl = url.replace(/\/$/, '');
         if (!tempUrl.includes(':')) {
-            tempUrl = `${tempUrl}:7687`;
+            tempUrl = `${tempUrl}:${NEO4J_BOLT_PORT}`;
         }
 
         if (!url.startsWith('bolt://') && !url.startsWith("bolt+s://") && !url.startsWith("neo4j+s://") && !url.startsWith("neo4j://")) {
