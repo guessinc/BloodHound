@@ -374,16 +374,6 @@ const Login = () => {
                         </div>
                         <div className='savecontainer'>
                             <div className='checkbox logincheck'>
-                                <label>
-                                    <input
-                                        checked={save}
-                                        onChange={(event) =>
-                                            setSave(event.target.checked)
-                                        }
-                                        type='checkbox'
-                                    />
-                                    <font color='white'>Save Password</font>
-                                </label>
                             </div>
                             <div className='buttoncontainer'>
                                 <Button
